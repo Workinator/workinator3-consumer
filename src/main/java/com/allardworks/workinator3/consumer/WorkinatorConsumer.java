@@ -1,9 +1,9 @@
 package com.allardworks.workinator3.consumer;
 
-import com.allardworks.workinator3.consumer.commands.RegisterConsumerCommand;
-import com.allardworks.workinator3.consumer.commands.UpdateConsumerStatusCommand;
-import com.allardworks.workinator3.consumer.commands.UpdateWorkersStatusCommand;
-import com.allardworks.workinator3.core.ServiceBase;
+import com.allardworks.workinator3.core.*;
+import com.allardworks.workinator3.core.commands.RegisterConsumerCommand;
+import com.allardworks.workinator3.core.commands.UpdateConsumerStatusCommand;
+import com.allardworks.workinator3.core.commands.UpdateWorkersStatusCommand;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

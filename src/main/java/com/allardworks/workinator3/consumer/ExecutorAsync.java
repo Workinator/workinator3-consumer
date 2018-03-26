@@ -1,6 +1,6 @@
 package com.allardworks.workinator3.consumer;
 
-import com.allardworks.workinator3.core.ServiceBase;
+import com.allardworks.workinator3.core.*;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 

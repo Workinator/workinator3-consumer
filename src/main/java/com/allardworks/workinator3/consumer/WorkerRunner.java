@@ -1,7 +1,9 @@
 package com.allardworks.workinator3.consumer;
 
-import com.allardworks.workinator3.consumer.commands.ReleaseAssignmentCommand;
-import com.allardworks.workinator3.consumer.commands.UpdateWorkersStatusCommand;
+import com.allardworks.workinator3.core.WorkerStatus;
+import com.allardworks.workinator3.core.Workinator;
+import com.allardworks.workinator3.core.commands.ReleaseAssignmentCommand;
+import com.allardworks.workinator3.core.commands.UpdateWorkersStatusCommand;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

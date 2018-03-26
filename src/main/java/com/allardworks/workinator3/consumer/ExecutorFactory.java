@@ -1,5 +1,8 @@
 package com.allardworks.workinator3.consumer;
 
+import com.allardworks.workinator3.core.ConsumerConfiguration;
+import com.allardworks.workinator3.core.WorkerId;
+import com.allardworks.workinator3.core.Workinator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

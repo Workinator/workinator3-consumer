@@ -1,7 +1,9 @@
 package com.allardworks.workinator3.consumer;
 
+import com.allardworks.workinator3.core.Assignment;
 import com.allardworks.workinator3.core.ServiceStatus;
 import com.allardworks.workinator3.core.Status;
+import com.allardworks.workinator3.core.WorkerStatus;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
