@@ -3,6 +3,7 @@ package com.allardworks.workinator3.consumer;
 import com.allardworks.workinator3.core.ConsumerConfiguration;
 import com.allardworks.workinator3.core.ConsumerId;
 import com.allardworks.workinator3.core.Workinator;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +17,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class WorkinatorConsumerFactory {
-    private final ConsumerConfiguration consumerConfiguration;
     private final Workinator workinator;
     private final ExecutorFactory executorFactory;
     private final WorkerFactory workerFactory;
 
-    public WorkinatorConsumer create(final ConsumerId id) {
-        return new WorkinatorConsumer(consumerConfiguration, workinator, executorFactory, workerFactory, id);
+    public WorkinatorConsumer create(@NonNull final ConsumerId id, @NonNull final ConsumerConfiguration configuration) {
+        return new WorkinatorConsumer(configuration, workinator, executorFactory, workerFactory, id);
     }
 }

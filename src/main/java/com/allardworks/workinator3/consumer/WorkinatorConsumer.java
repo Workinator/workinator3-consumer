@@ -4,6 +4,7 @@ import com.allardworks.workinator3.core.*;
 import com.allardworks.workinator3.core.commands.RegisterConsumerCommand;
 import com.allardworks.workinator3.core.commands.UpdateConsumerStatusCommand;
 import com.allardworks.workinator3.core.commands.UpdateWorkersStatusCommand;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +52,7 @@ public class WorkinatorConsumer extends ServiceBase {
      * The ID of this consumer.
      */
     @NonNull
+    @Getter
     private final ConsumerId consumerId;
 
     /**
@@ -109,6 +111,16 @@ public class WorkinatorConsumer extends ServiceBase {
         super.start();
     }
 
+    public List<ExecutorInfo> getExecutors() {
+        return executors.stream().map(e -> ExecutorInfo
+                .builder()
+                .assignment(e.getWorkerStatus().getCurrentAssignment())
+                .workerId(e.getWorkerStatus().getWorkerId())
+                .hasWork(e.getWorkerStatus().isHasWork())
+                .executorType(e.getClass().getTypeName())
+                .build()).collect(toList());
+    }
+
     @Override
     public Map<String, Object> getInfo() {
         return null;
@@ -123,7 +135,7 @@ public class WorkinatorConsumer extends ServiceBase {
 
         try {
             updateConsumerStatus();
-        } catch (final Exception ex){
+        } catch (final Exception ex) {
             log.error("udpate consumer status", ex);
         }
     }
@@ -151,24 +163,24 @@ public class WorkinatorConsumer extends ServiceBase {
         val ex = executors;
         val workers =
                 (ex == null
-                ? new ArrayList<WorkerStatus>()
-                : ex.stream().map(ExecutorAsync::getWorkerStatus).collect(toList()))
-                .stream()
-                .map(w -> {
-                    Assignment a = w.getCurrentAssignment();
-                    if (a != null) {
-                        // null out the worker id. eliminates duplicate information in the output.
-                        a =Assignment.setWorkerId(w.getCurrentAssignment(),null);
-                    }
+                        ? new ArrayList<WorkerStatus>()
+                        : ex.stream().map(ExecutorAsync::getWorkerStatus).collect(toList()))
+                        .stream()
+                        .map(w -> {
+                                    Assignment a = w.getCurrentAssignment();
+                                    if (a != null) {
+                                        // null out the worker id. eliminates duplicate information in the output.
+                                        a = Assignment.setWorkerId(w.getCurrentAssignment(), null);
+                                    }
 
-                    return
-                            ConsumerStatus.ConsumerWorkerStatus
-                                    .builder()
-                                    .workerNumber(w.getWorkerId().getWorkerNumber())
-                                    .assignment(a)
-                                    .build();
-                }
-        ).collect(toList());
+                                    return
+                                            ConsumerStatus.ConsumerWorkerStatus
+                                                    .builder()
+                                                    .workerNumber(w.getWorkerId().getWorkerNumber())
+                                                    .assignment(a)
+                                                    .build();
+                                }
+                        ).collect(toList());
 
         val status = ConsumerStatus
                 .builder()
