@@ -2,6 +2,7 @@ package com.allardworks.workinator3.consumer;
 
 import com.allardworks.workinator3.core.*;
 import com.allardworks.workinator3.core.commands.RegisterConsumerCommand;
+import com.allardworks.workinator3.core.commands.UnregisterConsumerCommand;
 import com.allardworks.workinator3.core.commands.UpdateConsumerStatusCommand;
 import com.allardworks.workinator3.core.commands.UpdateWorkersStatusCommand;
 import lombok.Getter;
@@ -118,6 +119,7 @@ public class WorkinatorConsumer extends ServiceBase {
                 .workerId(e.getWorkerStatus().getWorkerId())
                 .hasWork(e.getWorkerStatus().isHasWork())
                 .executorType(e.getClass().getTypeName())
+                .status(e.getStatus())
                 .build()).collect(toList());
     }
 
@@ -254,6 +256,7 @@ public class WorkinatorConsumer extends ServiceBase {
             // until then, it is stopping.
             cleanupExecutors();
             getServiceStatus().stopped();
+            workinator.unregisterConsumer(new UnregisterConsumerCommand(registration));
         }
     }
 
