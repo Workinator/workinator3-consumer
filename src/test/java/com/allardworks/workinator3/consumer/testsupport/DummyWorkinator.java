@@ -53,6 +53,11 @@ public class DummyWorkinator implements Workinator {
     }
 
     @Override
+    public List<ConsumerInfo> getConsumers() {
+        return null;
+    }
+
+    @Override
     public PartitionConfiguration getPartitionConfiguration(String partitionKey) {
         return null;
     }
