@@ -48,10 +48,10 @@ public class ScheduledTaskThread extends ServiceBase {
 
             try {
                 // basically a sleep. it releases
-                // every 10 seconds, or when the block is released.
+                // every interval, or when the block is released.
                 // the block is released when the service stops.
                 block.await(interval.toMillis(), MILLISECONDS);
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
                 e.printStackTrace();
             }
         }
