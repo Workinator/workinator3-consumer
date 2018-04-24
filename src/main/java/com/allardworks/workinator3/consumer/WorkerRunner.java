@@ -34,6 +34,9 @@ class WorkerRunner {
                 if (!status.isHasWork()) {
                     break;
                 }
+
+                //TODO: need to slow it down... possibly temporary
+                Thread.sleep(100);
             } catch (final Exception ex) {
                 log.error("worker.execute", ex);
             }
