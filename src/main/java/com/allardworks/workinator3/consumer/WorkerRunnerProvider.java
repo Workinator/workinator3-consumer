@@ -31,6 +31,7 @@ class WorkerRunnerProvider implements AutoCloseable {
         if (current == null) {
             return;
         }
+
         current.close();
         current = null;
     }
