@@ -38,7 +38,7 @@ public class DummyWorkinator implements Workinator {
     }
 
     @Override
-    public void updateWorkerStatus(UpdateWorkersStatusCommand workerStatus) {
+    public void setPartitionStatus(SetPartitionStatusCommand command) {
 
     }
 
@@ -64,6 +64,5 @@ public class DummyWorkinator implements Workinator {
 
     @Override
     public void close() {
-
     }
 }

@@ -26,7 +26,7 @@ public class ExecutorAsync extends ServiceBase {
 
         workerStatus = new WorkerStatus(workerId);
         consumerConfiguration = configuration;
-        runnerProvider = new WorkerRunnerProvider(this::canContinue, workerFactory, workinatorRepository, workerStatus, getServiceStatus());
+        runnerProvider = new WorkerRunnerProvider(this::canContinue, workerFactory, workinatorRepository, workerStatus);
         id = workerId;
     }
 

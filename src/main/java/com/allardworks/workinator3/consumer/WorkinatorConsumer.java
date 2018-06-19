@@ -2,9 +2,9 @@ package com.allardworks.workinator3.consumer;
 
 import com.allardworks.workinator3.core.*;
 import com.allardworks.workinator3.core.commands.RegisterConsumerCommand;
+import com.allardworks.workinator3.core.commands.SetPartitionStatusCommand;
 import com.allardworks.workinator3.core.commands.UnregisterConsumerCommand;
 import com.allardworks.workinator3.core.commands.UpdateConsumerStatusCommand;
-import com.allardworks.workinator3.core.commands.UpdateWorkersStatusCommand;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -117,7 +117,6 @@ public class WorkinatorConsumer extends ServiceBase {
                 .builder()
                 .assignment(e.getWorkerStatus().getCurrentAssignment())
                 .workerId(e.getWorkerStatus().getWorkerId())
-                .hasWork(e.getWorkerStatus().isHasWork())
                 .executorType(e.getClass().getTypeName())
                 .status(e.getStatus())
                 .build()).collect(toList());
@@ -129,11 +128,11 @@ public class WorkinatorConsumer extends ServiceBase {
     }
 
     private void maintenanceTasks() {
-        try {
+        /*try {
             updateWorkerStatuses();
         } catch (final Exception ex) {
             log.error("update worker statuses", ex);
-        }
+        }*/
 
         try {
             updateConsumerStatus();
@@ -142,6 +141,7 @@ public class WorkinatorConsumer extends ServiceBase {
         }
     }
 
+    /*
     private void updateWorkerStatuses() {
         val ex = executors;
         if (ex == null) {
@@ -152,6 +152,15 @@ public class WorkinatorConsumer extends ServiceBase {
 
         val statuses = ex.stream().map(ExecutorAsync::getWorkerStatus).collect(toList());
         workinator.updateWorkerStatus(new UpdateWorkersStatusCommand(statuses));
+    }*/
+
+    private void setPartitionStatus(String partitionKey, boolean hasWork) {
+        val command = SetPartitionStatusCommand
+                .builder()
+                .partitionKey(partitionKey)
+                .hasWork(hasWork)
+                .build();
+        workinator.setPartitionStatus(command);
     }
 
     public void updateConsumerStatus() {

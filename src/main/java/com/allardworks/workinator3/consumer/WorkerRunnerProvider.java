@@ -22,7 +22,6 @@ class WorkerRunnerProvider implements AutoCloseable {
     private final AsyncWorkerFactory workerFactory;
     private final Workinator workinator;
     private final WorkerStatus workerStatus;
-    private final ServiceStatus serviceStatus;
     private WorkerRunner current;
 
     /**
@@ -44,7 +43,7 @@ class WorkerRunnerProvider implements AutoCloseable {
      */
     private WorkerRunner createWorkerRunner(final Assignment newAssignment) {
         val worker = workerFactory.createWorker(newAssignment);
-        val context = new Context(newAssignment, workerStatus, () ->serviceStatus, canContinue);
+        val context = new Context(newAssignment, canContinue);
         return new WorkerRunner(workinator, workerStatus, worker, context);
     }
 
@@ -86,7 +85,7 @@ class WorkerRunnerProvider implements AutoCloseable {
      */
     public WorkerRunner lookupRunner() {
         val newAssignment = workinator.getAssignment(workerStatus);
-        val me = workerStatus.getWorkerId().getConsumer().getConsumerId().getName() + "." + workerStatus.getWorkerId().getWorkerNumber() + ": ";
+        //val me = workerStatus.getWorkerId().getConsumer().getConsumerId().getName() + "." + workerStatus.getWorkerId().getWorkerNumber() + ": ";
 
         // no assignment. close the current, if there is one.
         if (newAssignment == null) {
@@ -107,6 +106,11 @@ class WorkerRunnerProvider implements AutoCloseable {
         // old assignment and new assignment are the same. nothing to do.
         if (current.getStatus().getCurrentAssignment().getPartitionKey().equals(newAssignment.getPartitionKey())) {
             //System.out.println(me + "no change: " + current.getStatus().getCurrentAssignment().getPartitionKey());
+
+            // HACK: the ELAPSED timer needs to be reset so that CANCONTINUE returns true.
+            // need to be able to reset it elegantly.
+            val newcontext = new Context(current.getContext().getAssignment(), canContinue);
+            current.hackSetContext(newcontext);
             return current;
         }
 

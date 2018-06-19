@@ -24,8 +24,7 @@ public class ContextTests {
         val consumerRegistration = new ConsumerRegistration(consumerId, "");
         val workerId = new WorkerId(consumerRegistration, 1);
         val assignment = new Assignment(workerId, "a", "", "", new Date());
-        val workerStatus = new WorkerStatus(workerId);
-        val context = new Context(assignment, workerStatus, ServiceStatus::new, c -> true);
+        val context = new Context(assignment, c -> true);
 
         Thread.sleep(3);
         assertTrue(context.getElapsed().toMillis() > 3);

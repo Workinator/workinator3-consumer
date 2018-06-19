@@ -19,11 +19,9 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 public class Context implements WorkerContext {
     @NonNull private final Assignment assignment;
-    @NonNull private final WorkerStatus workerStatus;
-    @NonNull private final Supplier<ServiceStatus> executorStatus;
     @NonNull private final Function<Context, Boolean> canContinue;
-
     @NonNull private final LocalTime startDate = LocalTime.now();
+    private boolean hasWork;
 
     /**
      * The worker reports to the workinator that there is more work to do.
@@ -33,11 +31,11 @@ public class Context implements WorkerContext {
      * @param hasWork
      */
     public void hasWork(boolean hasWork) {
-        workerStatus.setHasWork(hasWork);
+        this.hasWork = hasWork;
     }
 
     public boolean hasWork() {
-        return workerStatus.isHasWork();
+        return hasWork;
     }
 
     /**
@@ -46,14 +44,6 @@ public class Context implements WorkerContext {
      */
     public Duration getElapsed() {
         return Duration.between(startDate, LocalTime.now());
-    }
-
-    /**
-     * Gets the executors current status.
-     * @return
-     */
-    public Status getExecutorStatus() {
-        return executorStatus.get().getStatus();
     }
 
     /**

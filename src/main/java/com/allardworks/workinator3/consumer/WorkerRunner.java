@@ -3,9 +3,9 @@ package com.allardworks.workinator3.consumer;
 import com.allardworks.workinator3.core.WorkerStatus;
 import com.allardworks.workinator3.core.Workinator;
 import com.allardworks.workinator3.core.commands.ReleaseAssignmentCommand;
-import com.allardworks.workinator3.core.commands.UpdateWorkersStatusCommand;
+import com.allardworks.workinator3.core.commands.SetPartitionStatusCommand;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
@@ -13,14 +13,14 @@ import java.util.Collections;
 /**
  * Runs the worker until it is time for the worker to stop.
  */
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Getter
 @Slf4j
 class WorkerRunner {
     private final Workinator workinator;
     private final WorkerStatus status;
     private final AsyncWorker worker;
-    private final WorkerContext context;
+    private WorkerContext context;
 
     /**
      * A loop that executes the worker until
@@ -31,7 +31,16 @@ class WorkerRunner {
         while (context.canContinue()) {
             try {
                 worker.execute(context);
-                if (!status.isHasWork()) {
+
+                // TODO: hack. need an event stream to be consumed elsewhere.
+                // too many updates happening here.... will remove.
+                workinator.setPartitionStatus(
+                        SetPartitionStatusCommand
+                        .builder()
+                        .partitionKey(context.getAssignment().getPartitionKey())
+                        .hasWork(context.hasWork())
+                        .build());
+                if (!context.hasWork()) {
                     break;
                 }
 
@@ -44,6 +53,10 @@ class WorkerRunner {
     }
 
 
+    public void hackSetContext(Context context) {
+        this.context = context;
+    }
+
     /**
      * Terminate the worker.
      */
@@ -54,7 +67,6 @@ class WorkerRunner {
             log.error("Error closing worker", e);
         }
 
-        workinator.updateWorkerStatus(new UpdateWorkersStatusCommand(Collections.singletonList(status)));
         workinator.releaseAssignment(new ReleaseAssignmentCommand(status.getCurrentAssignment()));
     }
 }

@@ -9,7 +9,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ExecutorInfo {
-    private boolean hasWork;
     private Assignment assignment;
     private WorkerId workerId;
     private String executorType;
